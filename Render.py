@@ -9,20 +9,21 @@ kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 os.system(f'mode con: cols={100} lines={40}')
 class ASCIIRender(object):
 
-    ColorBuffer = []
-    ZBuffer = []
 
     def __init__(self):
-        self.screenBuffer = win32console.GetStdHandle(win32console.STD_OUTPUT_HANDLE)
+        self.screenBuffer = win32console.GetStdHandle(win32console.STD_OUTPUT_HANDLE) # type: ignore
         self.consoleResolution = (100, 40)
+
 
     def background(self, color):
         Pixel = tc.colored(' ', color, 'on_'+color)
-        for i in range(self.consoleResolution[0] * self.consoleResolution[1]):
+        for i in range((self.consoleResolution[0]-10) * (self.consoleResolution[1]-10)):
             self.screenBuffer.WriteConsole(Pixel)
-        #self.screenBuffer.FillConsoleOutputCharacter(
-        #    Pixel, self.consoleResolution[0]*self.consoleResolution[1], win32console.PyCOORDType(0, 0))
-        
+
+    def change_pixel(self, x_coordinate, y_coordinate, color):
+        Pixel = tc.colored(' ', color, 'on_'+color)
+        self.screenBuffer.WriteConsoleOutputCharacter(Pixel, win32console.PyCOORDType(x_coordinate, y_coordinate))
+
 
     def Circle(self, R, x1, y1, color, ColorBuffer):
         disp_x = x1
@@ -60,11 +61,11 @@ class ASCIIRender(object):
 
 #os.system('cls')
 ASCII_Instance = ASCIIRender()
-print((tc.colored(' ', 'green', 'on_green')))
 #R = int(input('Введите радиус круга(целое не нулевое число): '))
 #x0 = int(size[0]/2)
 #y0 = int(size[1]/2)
 ASCII_Instance.background('white')
+ASCII_Instance.change_pixel(5, 5, 'red')
 #ASCII_Instance.render()
 
 '''
